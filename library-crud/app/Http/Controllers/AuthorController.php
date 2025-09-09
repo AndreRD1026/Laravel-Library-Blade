@@ -12,7 +12,12 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        return Author::all();
+        //? PARA USO DE API
+        // return Author::all();
+
+        //* PARA USO DE FRONTEND
+        $authors = Author::all();
+        return view('authors.index', compact('authors'));
     }
 
     /**
@@ -20,7 +25,7 @@ class AuthorController extends Controller
      */
     public function create()
     {
-        //
+        return view('authors.create');
     }
 
     /**
@@ -28,12 +33,24 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'birthdate' => 'nullable|date',
-            'nationality' => 'nullable|string'
-        ]);
-        return Author::create($data);
+        //? PARA USO DE API
+        // $data = $request->validate([
+        //     'name' => 'required|string',
+        //     'birthdate' => 'nullable|date',
+        //     'nationality' => 'nullable|string'
+        // ]);
+        // return Author::create($data);
+
+        //* PARA USO DE FRONTEND
+            $data = $request->validate([
+                'name' => 'required|string|max:255',
+                'birthdate' => 'nullable|date',
+                'nationality' => 'nullable|string|max:255'
+            ]);
+
+            Author::create($data);
+
+            return redirect()->route('authors.index')->with('success', 'Autor creado con éxito.');
     }
 
     /**
@@ -41,7 +58,11 @@ class AuthorController extends Controller
      */
     public function show(Author $author)
     {
-        return $author->load('books');
+        //? PARA USO DE API
+        // return $author->load('books');
+
+        //* PARA USO DE FRONTEND
+        return view('authors.show', compact('author'));
     }
 
     /**
@@ -49,7 +70,7 @@ class AuthorController extends Controller
      */
     public function edit(Author $author)
     {
-        //
+        return view('authors.edit', compact('author'));
     }
 
     /**
@@ -57,14 +78,26 @@ class AuthorController extends Controller
      */
     public function update(Request $request, Author $author)
     {
-        $data = $request->validate([
-            'name' => 'required|string',
-            'birthdate' => 'nullable|date',
-            'nationality' => 'nullable|string'
-        ]);
+        //? PARA USO DE API
+        // $data = $request->validate([
+        //     'name' => 'required|string',
+        //     'birthdate' => 'nullable|date',
+        //     'nationality' => 'nullable|string'
+        // ]);
 
-        $author->update($data);
-        return $author;
+        // $author->update($data);
+        // return $author;
+
+        //* PARA USO DE FRONTEND
+            $data = $request->validate([
+                'name' => 'required|string|max:255',
+                'birthdate' => 'nullable|date',
+                'nationality' => 'nullable|string|max:255'
+            ]);
+
+            $author->update($data);
+
+            return redirect()->route('authors.index')->with('success', 'Autor actualizado con éxito.');
     }
 
     /**
@@ -72,7 +105,12 @@ class AuthorController extends Controller
      */
     public function destroy(Author $author)
     {
-        $author->delete();
-        return response()->noContent();
+        //? PARA USO DE API
+        // $author->delete();
+        // return response()->noContent();
+
+        //* PARA USO DE FRONTEND
+            $author->delete();
+            return redirect()->route('authors.index')->with('success', 'Autor eliminado con éxito.');
     }
 }

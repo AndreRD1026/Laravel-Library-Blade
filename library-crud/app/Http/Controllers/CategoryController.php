@@ -12,7 +12,12 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return Category::all();
+        //? PARA USO DE API
+        // return Category::all();
+
+        //* PARA USO DE FRONTEND
+        $categories = Category::all();
+        return view('categories.index', compact("categories"));
     }
 
     /**
@@ -20,7 +25,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('categories.create');
     }
 
     /**
@@ -28,11 +33,22 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        //? PARA USO DE API
+        // $data = $request->validate([
+        //     'name' => 'required|string',
+        //     'description' => 'nullable|string'
+        // ]);
+        // return Category::create($data);
+
+        //* PARA USO DE FRONTEND
         $data = $request->validate([
-            'name' => 'required|string',
-            'description' => 'nullable|string'
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255'
         ]);
-        return Category::create($data);
+
+        Category::create($data);
+
+        return redirect()->route('categories.index')->with('success','Categoría creada con éxito');
     }
 
     /**
@@ -40,7 +56,11 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        return $category->load('books');
+        //? PARA USO DE API
+        // return $category->load('books');
+
+        //* PARA USO DE FRONTEND
+        return view('categories.show', compact('category'));
     }
 
     /**
@@ -48,7 +68,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('categories.edit', compact('category'));
     }
 
     /**
@@ -56,13 +76,23 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        //? PARA USO DE API
+        // $data = $request->validate([
+        //     'name' => 'required|string',
+        //     'description' => 'nullable|string'
+        // ]);
+
+        // $category->update($data);
+        // return $category;
+
+        //* PARA USO DE FRONTEND
         $data = $request->validate([
-            'name' => 'required|string',
-            'description' => 'nullable|string'
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255'
         ]);
 
         $category->update($data);
-        return $category;
+        return redirect()->route('categories.index')->with('success','Categoría actualizada con éxito');
     }
 
     /**
@@ -70,7 +100,12 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        //? PARA USO DE API
+        // $category->delete();
+        // return response()->noContent();
+
+        //* PARA USO DE FRONTEND
         $category->delete();
-        return response()->noContent();
+        return redirect()->route('categories.index')->with('success','Categoría eliminada con éxito');
     }
 }
